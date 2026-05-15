@@ -1,104 +1,121 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const heroContainer = document.getElementById('hero-container');
     const contentArea = document.getElementById('content-area');
-    const filterContainer = document.getElementById('filter-container');
+    const header = document.getElementById('main-header');
     const modal = document.getElementById('video-modal');
     const playerContainer = document.getElementById('player-container');
     const closeModal = document.getElementById('close-modal');
-    let currentCategory = 'all';
 
     // Initialize View
     init();
 
     function init() {
-        renderFilters();
-        renderContent('all');
+        renderHero();
+        renderRows();
+        setupHeaderScroll();
         setupModalListeners();
     }
 
-    function renderFilters() {
-        // Clear existing dynamic filters (keep 'All')
-        // Actually simpler to clear logic or just append. 
-        // We already have "All" in HTML, let's append others.
+    function renderHero() {
+        // Pick a random video for the hero section
+        const allVideos = videoData.flatMap(cat => cat.videos);
+        const featuredVideo = allVideos[Math.floor(Math.random() * allVideos.length)];
+        const videoId = featuredVideo.id;
+        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 
-        videoData.forEach(cat => {
-            const btn = document.createElement('button');
-            btn.className = 'filter-btn';
-            btn.textContent = cat.category;
-            btn.dataset.filter = cat.category;
-            btn.addEventListener('click', () => handleFilterClick(cat.category, btn));
-            filterContainer.appendChild(btn);
-        });
-
-        // Add listener to 'All' button
-        const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
-        allBtn.addEventListener('click', () => handleFilterClick('all', allBtn));
+        heroContainer.style.backgroundImage = `url('${thumbnailUrl}')`;
+        heroContainer.innerHTML = `
+            <div class="hero-content">
+                <h1>${featuredVideo.title}</h1>
+                <p>สัมผัสประสบการณ์การเรียนรู้ Zabbix ในรูปแบบใหม่ที่เข้าใจง่ายและเป็นกันเอง โดยกลุ่ม Zabbix in Thailand</p>
+                <div class="hero-btns">
+                    <button class="btn-play" onclick="openVideo('${videoId}')">
+                        <ion-icon name="play"></ion-icon> Play
+                    </button>
+                    <button class="btn-info">
+                        <ion-icon name="information-circle-outline"></ion-icon> More Info
+                    </button>
+                </div>
+            </div>
+        `;
     }
 
-    function handleFilterClick(category, btn) {
-        // Update Active State
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        currentCategory = category;
-        renderContent(category);
-    }
-
-    function renderContent(filter) {
+    function renderRows() {
         contentArea.innerHTML = '';
 
-        videoData.forEach(cat => {
-            if (filter === 'all' || filter === cat.category) {
-                const section = document.createElement('section');
-                section.className = 'category-section';
+        videoData.forEach((cat, index) => {
+            const row = document.createElement('div');
+            row.className = 'carousel-row';
+            
+            const title = document.createElement('h2');
+            title.className = 'row-title';
+            title.textContent = cat.category;
+            row.appendChild(title);
 
-                const title = document.createElement('h2');
-                title.className = 'category-title';
-                title.textContent = cat.category;
-                section.appendChild(title);
+            const container = document.createElement('div');
+            container.className = 'row-container';
 
-                const grid = document.createElement('div');
-                grid.className = 'video-grid';
+            const slider = document.createElement('div');
+            slider.className = 'row-slider';
+            slider.id = `slider-${index}`;
 
-                cat.videos.forEach(video => {
-                    const card = createVideoCard(video);
-                    grid.appendChild(card);
-                });
+            cat.videos.forEach(video => {
+                const card = createVideoCard(video);
+                slider.appendChild(card);
+            });
 
-                section.appendChild(grid);
-                contentArea.appendChild(section);
-            }
+            const leftBtn = document.createElement('button');
+            leftBtn.className = 'slider-control left';
+            leftBtn.innerHTML = '<ion-icon name="chevron-back-outline"></ion-icon>';
+            leftBtn.onclick = () => scrollSlider(slider, 'left');
+
+            const rightBtn = document.createElement('button');
+            rightBtn.className = 'slider-control right';
+            rightBtn.innerHTML = '<ion-icon name="chevron-forward-outline"></ion-icon>';
+            rightBtn.onclick = () => scrollSlider(slider, 'right');
+
+            container.appendChild(leftBtn);
+            container.appendChild(slider);
+            container.appendChild(rightBtn);
+            row.appendChild(container);
+            contentArea.appendChild(row);
         });
     }
 
     function createVideoCard(video) {
         const card = document.createElement('div');
         card.className = 'video-card';
+        card.onclick = () => openVideo(video.id);
 
-        // Extract ID if not provided (though data.js has it, robustness helps)
-        const videoId = video.id || extractVideoId(video.url);
-        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-        // Fallback image handling could be added here, but complex for vanilla JS without specific event listeners for error. 
-        // We'll trust maxresdefault for now or use hqdefault if we wanted to be super safe.
+        const thumbnailUrl = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
 
         card.innerHTML = `
-            <div class="thumbnail-container" onclick="openVideo('${videoId}')">
-                <img src="${thumbnailUrl}" alt="${video.title}" loading="lazy">
-                <div class="play-button">
-                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-            </div>
-            <div class="video-info">
-                <div class="video-title" title="${video.title}">${video.title}</div>
+            <img src="${thumbnailUrl}" alt="${video.title}" loading="lazy">
+            <div class="video-card-info">
+                <div class="video-card-title">${video.title}</div>
             </div>
         `;
 
         return card;
     }
 
-    function extractVideoId(url) {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : null;
+    function scrollSlider(slider, direction) {
+        const scrollAmount = slider.offsetWidth * 0.8;
+        if (direction === 'left') {
+            slider.scrollLeft -= scrollAmount;
+        } else {
+            slider.scrollLeft += scrollAmount;
+        }
+    }
+
+    function setupHeaderScroll() {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
     }
 
     // Modal Logic
@@ -106,20 +123,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
         playerContainer.innerHTML = `<iframe src="${embedUrl}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
+        document.body.style.overflow = 'hidden'; 
     };
 
     function setupModalListeners() {
         closeModal.addEventListener('click', closeVideo);
 
-        // Close on click outside
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeVideo();
-            }
-        });
+        const overlay = document.querySelector('.modal-overlay');
+        overlay.addEventListener('click', closeVideo);
 
-        // Close on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modal.style.display === 'flex') {
                 closeVideo();
@@ -129,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeVideo() {
         modal.style.display = 'none';
-        playerContainer.innerHTML = ''; // Stop video
+        playerContainer.innerHTML = '';
         document.body.style.overflow = '';
     }
 });

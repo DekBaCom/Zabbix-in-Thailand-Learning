@@ -8,37 +8,32 @@
     <meta name="description"
         content="ศูนย์การเรียนรู้ Zabbix โดยกลุ่ม Zabbix in Thailand รวมวิดีโอสอนและ Workshop ล่าสุด">
     <link rel="stylesheet" href="styles.css">
+    <!-- Ionicons for better UI icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 
 <body>
 
-    <header>
+    <header id="main-header">
         <div class="logo-container">
             <div class="logo-text"><span>Zabbix</span> Learning</div>
         </div>
         <nav>
-            <a href="#how-to-add">Contribute</a>
+            <a href="#">Home</a>
             <a href="https://www.facebook.com/groups/zabbixinthailand" target="_blank">Facebook Group</a>
+            <a href="#" class="contribute-btn">Contribute</a>
         </nav>
     </header>
 
-    <div class="hero">
-        <h1>Zabbix Learning Center</h1>
-        <p>แหล่งรวบรวมความรู้ Zabbix และเทคโนโลยีที่เกี่ยวข้อง โดยกลุ่ม Zabbix in Thailand</p>
+    <!-- Hero Section (Dynamic) -->
+    <div id="hero-container" class="hero-netflix">
+        <!-- Will be populated by JS -->
     </div>
 
-    <main>
-        <!-- Filter Buttons -->
-        <div class="filter-container" id="filter-container">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <!-- Dynamic filters will be added here -->
-        </div>
-
-        <!-- Video Content (Populated by JS) -->
+    <main class="netflix-content">
+        <!-- Video Categories (Populated by JS as horizontal sliders) -->
         <div id="content-area"></div>
-
-        <!-- How to Add Data Section -->
-
     </main>
 
     <footer>
@@ -48,8 +43,11 @@
 
     <!-- Video Modal -->
     <div class="modal" id="video-modal">
+        <div class="modal-overlay"></div>
         <div class="modal-content">
-            <span class="close-modal" id="close-modal">&times;</span>
+            <button class="close-modal" id="close-modal">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
             <div id="player-container"></div>
         </div>
     </div>
