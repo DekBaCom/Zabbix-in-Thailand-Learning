@@ -72,10 +72,23 @@ document.addEventListener('DOMContentLoaded', () => {
             row.className = 'carousel-row';
             row.id = `row-${index}`;
             
+            const headerRow = document.createElement('div');
+            headerRow.className = 'row-header';
+
             const title = document.createElement('h2');
             title.className = 'row-title';
             title.textContent = cat.category;
-            row.appendChild(title);
+            headerRow.appendChild(title);
+
+            if (cat.playlistId) {
+                const playAllBtn = document.createElement('button');
+                playAllBtn.className = 'btn-play-all';
+                playAllBtn.innerHTML = '<ion-icon name="play-circle-outline"></ion-icon> Play All';
+                playAllBtn.onclick = () => openPlaylist(cat.playlistId);
+                headerRow.appendChild(playAllBtn);
+            }
+
+            row.appendChild(headerRow);
 
             const container = document.createElement('div');
             container.className = 'row-container';
@@ -149,6 +162,13 @@ document.addEventListener('DOMContentLoaded', () => {
         playerContainer.innerHTML = `<iframe src="${embedUrl}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden'; 
+    };
+
+    window.openPlaylist = function (playlistId) {
+        const embedUrl = `https://www.youtube.com/embed/videoseries?list=${playlistId}&autoplay=1`;
+        playerContainer.innerHTML = `<iframe src="${embedUrl}" title="YouTube playlist player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     };
 
     function setupModalListeners() {

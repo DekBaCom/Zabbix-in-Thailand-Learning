@@ -241,12 +241,44 @@ nav a:hover {
   margin-bottom: 2.5rem;
 }
 
-.row-title {
+.row-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
   padding: 0 4%;
+  margin-bottom: 0.8rem;
+}
+
+.row-title {
   font-size: 1.4rem;
   font-weight: 700;
-  margin-bottom: 0.8rem;
   color: var(--text-secondary);
+  margin-bottom: 0; /* Override previous margin */
+}
+
+.btn-play-all {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-play-all:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-play-all ion-icon {
+  font-size: 1.1rem;
 }
 
 .row-container {

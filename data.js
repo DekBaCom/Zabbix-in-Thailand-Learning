@@ -1,6 +1,7 @@
 const videoData = [
     {
         category: "Zabbix & Community Introduction",
+        playlistId: "PL_Xv_Xw_Xw_Xw_example1", 
         videos: [
             {
                 title: "Intro zabbix in Thailand",
@@ -21,6 +22,7 @@ const videoData = [
     },
     {
         category: "AD DS Design & PowerShell Scripting",
+        playlistId: "PL_Xv_Xw_Xw_Xw_example2",
         videos: [
             {
                 title: "Day1 | EP.1 | Workshop: AD DS Design,Implement and PowerShell scripting | Zabbix in Thailand",
@@ -71,6 +73,7 @@ const videoData = [
     },
     {
         category: "Python Basics",
+        playlistId: "PL_Xv_Xw_Xw_Xw_example3",
         videos: [
             {
                 title: "EP.1 | Python Basics | Zabbix in Thailand",
@@ -96,6 +99,7 @@ const videoData = [
     },
     {
         category: "Workshop: HAProxy with KeepAlived & NGINX",
+        playlistId: "PL_Xv_Xw_Xw_Xw_example4",
         videos: [
             {
                 title: "Workshop _ HAProxy with KeepAlived & NGINX-ช่วงที่1 (HAProxy with KeepAlived) | Zabbix in Thailand",
@@ -116,6 +120,7 @@ const videoData = [
     },
     {
         category: "Veeam Backup & Replication",
+        playlistId: "PL_Xv_Xw_Xw_Xw_example5",
         videos: [
             {
                 title: "EP1 | Workshop Veeam Backup Replication | ZabbixinThailand",
@@ -136,6 +141,7 @@ const videoData = [
     },
     {
         category: "IT Talks",
+        playlistId: "PL_Xv_Xw_Xw_Xw_example6",
         videos: [
             {
                 title: "IT Talks : Work From Home The Series EP.4 อวัจนภาษา และ Indicators of Compromise (IOCs)",
@@ -156,6 +162,7 @@ const videoData = [
     },
     {
         category: "PR & Special Events",
+        playlistId: "PL_Xv_Xw_Xw_Xw_example7",
         videos: [
             {
                 title: "PR | Azure monitoring, security, and compliance workshop | Zabbix in Thailand",
