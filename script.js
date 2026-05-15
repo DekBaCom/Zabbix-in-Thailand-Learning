@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('video-modal');
     const playerContainer = document.getElementById('player-container');
     const closeModal = document.getElementById('close-modal');
+    const categoriesDropdown = document.getElementById('categories-dropdown');
 
     // Initialize View
     init();
@@ -12,12 +13,35 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         renderHero();
         renderRows();
+        renderDropdown();
         setupHeaderScroll();
         setupModalListeners();
     }
 
+    function renderDropdown() {
+        categoriesDropdown.innerHTML = '';
+        videoData.forEach((cat, index) => {
+            const item = document.createElement('a');
+            item.href = `#row-${index}`;
+            item.textContent = cat.category;
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const row = document.getElementById(`row-${index}`);
+                const headerOffset = 80;
+                const elementPosition = row.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            });
+            categoriesDropdown.appendChild(item);
+        });
+    }
+
     function renderHero() {
-        // Pick a random video for the hero section
+        // ... (rest of the function remains same, but I need to provide it all)
         const allVideos = videoData.flatMap(cat => cat.videos);
         const featuredVideo = allVideos[Math.floor(Math.random() * allVideos.length)];
         const videoId = featuredVideo.id;
@@ -46,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.forEach((cat, index) => {
             const row = document.createElement('div');
             row.className = 'carousel-row';
+            row.id = `row-${index}`;
             
             const title = document.createElement('h2');
             title.className = 'row-title';
